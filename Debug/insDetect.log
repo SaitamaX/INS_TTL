@@ -1,0 +1,8 @@
+﻿  insDetect.cpp
+c:\users\jlurobot\documents\visual studio 2015\projects\insdetect\insdetect\insdetect.cpp(126): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
+c:\users\jlurobot\documents\visual studio 2015\projects\insdetect\insdetect\insdetect.cpp(127): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
+c:\users\jlurobot\documents\visual studio 2015\projects\insdetect\insdetect\insdetect.cpp(128): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
+c:\users\jlurobot\documents\visual studio 2015\projects\insdetect\insdetect\insdetect.cpp(129): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
+c:\users\jlurobot\documents\visual studio 2015\projects\insdetect\insdetect\insdetect.cpp(130): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
+  insDetect.vcxproj -> C:\Users\jlurobot\Documents\Visual Studio 2015\Projects\insDetect\Debug\insDetect.exe
+  insDetect.vcxproj -> C:\Users\jlurobot\Documents\Visual Studio 2015\Projects\insDetect\Debug\insDetect.pdb (Full PDB)

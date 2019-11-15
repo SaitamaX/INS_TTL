@@ -1,0 +1,12 @@
+﻿  insDetect.cpp
+insDetect.cpp(24): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+insDetect.cpp(75): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
+insDetect.cpp(76): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
+insDetect.cpp(141): warning C4244: “初始化”: 从“__int64”转换到“int”，可能丢失数据
+  正在生成代码
+  4 of 75 functions ( 5.3%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  已完成代码的生成
+  insDetect.vcxproj -> C:\Users\jlurobot\Documents\Visual Studio 2015\Projects\insDetect\x64\Release\insDetect.exe
+  insDetect.vcxproj -> C:\Users\jlurobot\Documents\Visual Studio 2015\Projects\insDetect\x64\Release\insDetect.pdb (Full PDB)

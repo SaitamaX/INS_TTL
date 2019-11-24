@@ -60,6 +60,21 @@ HANDLE InitTTL(char *szStr) {
 	return hCom1;
 }
 
+bool checkData(unsigned char chrTemp[]) {
+	unsigned char sum = 0x00;
+	for(int i = 0; i < 5; i++)
+	{
+		for(int j = 0; j < 10; j++)
+		{
+			sum += chrTemp[i * 11 + j];
+		}
+		if (sum != chrTemp[i * 11 + 10])
+			return false;
+		sum = 0x00;
+	}
+	return true;
+}
+
 void DecodeIMUData(unsigned char chrTemp[])
 {
 	switch (chrTemp[1])
@@ -76,9 +91,9 @@ void DecodeIMUData(unsigned char chrTemp[])
 			myAngle[1] = -atanf((a_avg[0]) / (a_avg[2])) / PI * 180; 
 			end_ = clock();
 			//printf("\rmyAngel = xÖá£º%4.2f¡ã\t yÖá%4.2f¡ã\tzÖáa£º%4.2f\txÖáa£º%4.2f\tyÖáa£º%4.2f\t", myAngle[0], myAngle[1], a_avg[2] - 0.02, a_avg[0] - 0.05, a_avg[1]);
-			//printf("\rmyAngel = xÖá£º%4.2f¡ã\t yÖá%4.2f¡ã", myAngle[0], myAngle[1]);
+			//printf("myAngel = xÖá£º%4.2f¡ã\t yÖá%4.2f¡ã\n", myAngle[0], myAngle[1]);
 			//printf("\rzÖáÔ­Ê¼a£º%4.2f zÖá¼ÆËãa£º%4.2f", a_avg[2], a[2]);
-			//cout << "time" << end_ - start << "ms" << endl;
+			cout << "time" << end_ - start << "ms" << endl;
 			for (int j = 0; j < 3; j++)
 				a_avg[j] = 0;
 			i = 0;
@@ -106,20 +121,21 @@ void DecodeIMUData(unsigned char chrTemp[])
 	}
 }
 
-float InvSqrt(float x) {
-	float xhalf = 0.5f*x;
-	int i = *(int*)&x;        // get bits for floating VALUE
-	i = 0x5f375a86 - (i >> 1); // gives initial guess y0
-	x = *(float*)&i;         // convert bits BACK to float
-	x = x*(1.5f - xhalf*x*x); // Newton step, repeating increases accuracy
-	return x;
-}
+//float InvSqrt(float x) {
+//	float xhalf = 0.5f*x;
+//	int i = *(int*)&x;        // get bits for floating VALUE
+//	i = 0x5f375a86 - (i >> 1); // gives initial guess y0
+//	x = *(float*)&i;         // convert bits BACK to float
+//	x = x*(1.5f - xhalf*x*x); // Newton step, repeating increases accuracy
+//	return x;
+//}
 
 int main() {
-	HANDLE hCom1 = InitTTL("COM3");
+	HANDLE hCom1 = InitTTL("COM4");
 	unsigned char buffer[DATASIZE];
 	DWORD readsize;
-	unsigned char *p = NULL;
+	unsigned char *p = buffer - 1;
+	int off = 1;
 	if (hCom1 == INVALID_HANDLE_VALUE) {
 		system("pause");
 		return -1;
@@ -149,27 +165,54 @@ int main() {
 		try {
 			ReadFile(hCom1, buffer, DATASIZE, &readsize, NULL);
 			p = find(buffer, buffer + DATASIZE, 0x55);
-			if (p == buffer && *(p + 1) == 0x51) {
-				for (int i = 0; i < 5; i++)
-					DecodeIMUData(buffer + i * 11);
+			if (p == buffer && *(p + 1) == 0x51) 
+			{
+				
+				if (checkData(buffer)) 
+				{
+					/*for (int i = 0; i < DATASIZE; i++)
+					{
+						printf("%02X ", buffer[i]);
+					}
+					printf("\n\n");*/
+					for (int i = 0; i < 5; i++) 
+					{
+						DecodeIMUData(buffer + i * 11);
+					}
+				}
 			}
 			else
 			{
-				while (p != buffer + DATASIZE - 1 && *(p + 1) != 0x51) {
+				while (p < buffer + DATASIZE - 1 && *(p + 1) != 0x51) 
+				{
 					p = find(p + 1, buffer + DATASIZE, 0x55);
 				}
 				int off = p - buffer;
 				memmove(buffer, p, DATASIZE - off);
 				ReadFile(hCom1, buffer + DATASIZE - off, off, &readsize, NULL);
-				for (int i = 0; i < 5; i++)
-					DecodeIMUData(buffer + i * 11);
+				if (checkData(buffer)) 
+				{
+					/*for (int i = 0; i < DATASIZE; i++) 
+					{
+						printf("%02X ", buffer[i]);
+					}
+					printf("\n\n");*/
+					for (int i = 0; i < 5; i++) 
+					{
+						DecodeIMUData(buffer + i * 11);
+					}
+				}
 			}
 		}
 		catch (exception e) {
 			continue;
 		}
 	}
+	/*unsigned char t = 0x55, m = 0x51, sum = 0x00;
+	sum = t + m;
+	printf("%02X ", sum);
+	if (sum == 0xa6)
+		printf("ok");*/
 	system("pause");
-	CloseHandle(hCom1);
 	return 0;
 }
